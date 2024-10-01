@@ -1,0 +1,41 @@
+# Python
+*.py[cod]
+__pycache__/
+*.so
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Virtual Environment
+venv/
+.env
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# DataGrip
+.idea/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Logs
+*.log
+
+# Miscellaneous
+*.DS_Store
+*.egg
+*.coverage
+*.mypy_cache/
+*.pytest_cache/
+*.pylint.d/
+*.hypothesis/
+.coverage.*
+
+# MySQL
+*.sql
+*.sql.gz
