@@ -3,26 +3,35 @@ from typing import List, Optional
 
 # Organization Pydantic Models
 class OrganizationBase(BaseModel):
-    organization_name: str
-    created_at: Optional[str] = None  # Use datetime type if preferred
-    organization_code: Optional[str] = None
+    id: int
+    name: str
+    created_at: Optional[str] = None
+    code: Optional[str] = None
     category: Optional[str] = None
 
 class OrganizationCreate(OrganizationBase):
     pass
 
 class Organization(OrganizationBase):
-    organization_id: int
+    id: int
 
     class Config:
         orm_mode = True
 
+class PaginatedOrganizationResponse(BaseModel):
+    items: List[Organization]
+    total: int
+    page: int
+    size: int
+    pages: int
+
 
 # Event Pydantic Models
 class EventBase(BaseModel):
-    event_name: str
+    id: int
+    name: str
     created_at: Optional[str] = None  # Use datetime type if preferred
-    event_code: Optional[str] = None
+    code: Optional[str] = None
     start_time: Optional[str] = None  # Use datetime type if preferred
     end_time: Optional[str] = None
     date: Optional[str] = None  # Use datetime type if preferred
@@ -32,7 +41,7 @@ class EventCreate(EventBase):
     pass
 
 class Event(EventBase):
-    event_id: int
+    id: int
 
     class Config:
         orm_mode = True
