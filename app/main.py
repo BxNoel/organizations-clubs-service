@@ -1,6 +1,10 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from sqlalchemy import func
+from math import ceil
+
+
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
@@ -37,10 +41,33 @@ def read_root():
 def create_organization(organization: schemas.OrganizationCreate, db: Session = Depends(get_db)):
     return crud.create_organization(db=db, organization=organization)
 
-@app.get("/organizations/", response_model=list[schemas.Organization])
-def get_organizations(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    organizations = crud.get_organizations(db, skip=skip, limit=limit)
-    return organizations
+@app.get("/organizations/", response_model=schemas.PaginatedOrganizationResponse)
+def get_organizations(
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, description="Page number"),
+    size: int = Query(10, ge=1, le=100, description="Items per page")
+):
+    skip = (page - 1) * size
+    
+    # Get organizations for the current page
+    organizations = crud.get_organizations(db, skip=skip, limit=size)
+    
+    # Get total count of organizations
+    total = db.query(func.count(models.Organization.id)).scalar()
+    
+    # Calculate total pages
+    pages = ceil(total / size)
+    
+    if page > pages and total > 0:
+        raise HTTPException(status_code=404, detail="Page not found")
+    
+    return {
+        "items": organizations,
+        "total": total,
+        "page": page,
+        "size": size,
+        "pages": pages
+    }
 
 @app.get("/organizations/{organization_id}/", response_model=schemas.Organization)
 def get_organization(organization_id: int, db: Session = Depends(get_db)):

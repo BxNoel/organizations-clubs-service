@@ -18,6 +18,13 @@ class Organization(OrganizationBase):
     class Config:
         orm_mode = True
 
+class PaginatedOrganizationResponse(BaseModel):
+    items: List[Organization]
+    total: int
+    page: int
+    size: int
+    pages: int
+
 
 # Event Pydantic Models
 class EventBase(BaseModel):
