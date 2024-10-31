@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
 from . import models, schemas
+from datetime import datetime
+
 
 # Organization functions
 def get_organization(db: Session, organization_id: int):
@@ -9,7 +11,6 @@ def get_organizations(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Organization).offset(skip).limit(limit).all()
 
 def create_organization(db: Session, organization: schemas.OrganizationCreate):
-    print(organization)
     db_organization = models.Organization(**organization.model_dump())
     db.add(db_organization)
     db.commit()
@@ -32,9 +33,7 @@ def delete_organization(db: Session, organization_id: int):
         db.commit()
     return db_organization
 
-# Event functions
 def get_event(db: Session, event_id: int):
-    # print(db.query(models.Event).filter(models.Event.id == event_id).first())
     return db.query(models.Event).filter(models.Event.id == event_id).first()
 
 def get_events(db: Session, skip: int = 0, limit: int = 100):

@@ -1,11 +1,9 @@
 from pydantic import BaseModel
 from typing import List, Optional
+from datetime import datetime, date, time
 
-# Organization Pydantic Models
 class OrganizationBase(BaseModel):
-    id: int
     name: str
-    created_at: Optional[str] = None
     code: Optional[str] = None
     category: Optional[str] = None
 
@@ -14,6 +12,7 @@ class OrganizationCreate(OrganizationBase):
 
 class Organization(OrganizationBase):
     id: int
+    created_at: datetime
 
     class Config:
         orm_mode = True
@@ -25,16 +24,12 @@ class PaginatedOrganizationResponse(BaseModel):
     size: int
     pages: int
 
-
-# Event Pydantic Models
 class EventBase(BaseModel):
-    id: int
     name: str
-    created_at: Optional[str] = None  # Use datetime type if preferred
     code: Optional[str] = None
-    start_time: Optional[str] = None  # Use datetime type if preferred
-    end_time: Optional[str] = None
-    date: Optional[str] = None  # Use datetime type if preferred
+    start_time: Optional[time] = None
+    end_time: Optional[time] = None
+    date: Optional[datetime] = None
     location: Optional[str] = None
 
 class EventCreate(EventBase):
@@ -42,6 +37,43 @@ class EventCreate(EventBase):
 
 class Event(EventBase):
     id: int
+    created_at: datetime
 
     class Config:
         orm_mode = True
+
+class PaginatedEventResponse(BaseModel):
+    items: List[Event]
+    total: int
+    page: int
+    size: int
+    pages: int
+
+
+class OrganizationCreateResponse(BaseModel):
+    id: Optional[int] = None 
+    task_id: Optional[str] = None 
+    status: str
+    status_url: Optional[str] = None
+
+class OrganizationStatusResponse(BaseModel):
+    status: str
+    organization_id: Optional[int] = None 
+    error: Optional[str] = None  
+
+class EventCreateResponse(BaseModel):
+    id: Optional[int] = None 
+    task_id: Optional[str] = None 
+    status: str
+    status_url: Optional[str] = None  
+
+class EventStatusResponse(BaseModel):
+    status: str
+    event_id: Optional[int] = None
+    error: Optional[str] = None
+
+
+
+class LinkHeader(BaseModel):
+    url: str
+    rel: str

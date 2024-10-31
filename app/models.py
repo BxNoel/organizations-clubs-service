@@ -1,26 +1,25 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, Date
-from sqlalchemy.orm import relationship
-
+from sqlalchemy import Column, BigInteger, String, Text, DateTime, Time, Date
+from sqlalchemy.sql import func
 from .database import Base
 
 class Organization(Base):
     __tablename__ = "organization_database"
     
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(Text, nullable=True)
-    created_at = Column(Text, nullable=True)  # Use appropriate type for timestamp if needed
-    code = Column(Text, nullable=True)
-    category = Column(Text, nullable=True)
-
+    id = Column(BigInteger, primary_key=True, autoincrement=True, index=True)
+    name = Column(Text)
+    created_at = Column(DateTime, server_default=func.now())
+    code = Column(String(50))
+    category = Column(String(100)) 
 
 class Event(Base):
     __tablename__ = "events_database"
     
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(Text, nullable=True)
-    created_at = Column(Text, nullable=True)  # Use appropriate type for timestamp if needed
-    code = Column(Text, nullable=True)
-    start_time = Column(Text, nullable=True)  # Use Time or DateTime if you want to represent specific times
-    end_time = Column(Text, nullable=True)
-    date = Column(Text, nullable=True)
-    location = Column(Text, nullable=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True, index=True)
+    name = Column(Text)
+    created_at = Column(DateTime, server_default=func.now())
+    code = Column(String(50)) 
+    start_time = Column(Time)
+    end_time = Column(Time)
+    date = Column(Date)
+    location = Column(Text)
+    
