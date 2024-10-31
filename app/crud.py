@@ -7,8 +7,13 @@ from datetime import datetime
 def get_organization(db: Session, organization_id: int):
     return db.query(models.Organization).filter(models.Organization.id == organization_id).first()
 
-def get_organizations(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Organization).offset(skip).limit(limit).all()
+def get_organizations(db: Session, filters: dict = {}, skip: int = 0, limit: int = 100):
+    query = db.query(models.Organization)
+    if 'name' in filters:
+        query = query.filter(models.Organization.name.ilike(f"%{filters['name']}%"))
+    if 'category' in filters:
+        query = query.filter(models.Organization.category == filters['category'])
+    return query.offset(skip).limit(limit).all()
 
 def create_organization(db: Session, organization: schemas.OrganizationCreate):
     db_organization = models.Organization(**organization.model_dump())
@@ -36,8 +41,13 @@ def delete_organization(db: Session, organization_id: int):
 def get_event(db: Session, event_id: int):
     return db.query(models.Event).filter(models.Event.id == event_id).first()
 
-def get_events(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Event).offset(skip).limit(limit).all()
+def get_events(db: Session, filters: dict = {}, skip: int = 0, limit: int = 100):
+    query = db.query(models.Event)
+    if 'name' in filters:
+        query = query.filter(models.Event.name.ilike(f"%{filters['name']}%"))
+    if 'date' in filters:
+        query = query.filter(models.Event.date == filters['date'])
+    return query.offset(skip).limit(limit).all()
 
 def create_event(db: Session, event: schemas.EventCreate):
     db_event = models.Event(**event.dict())
